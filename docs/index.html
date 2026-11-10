@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Exact first-hit probability, conditional time, and Doob transforms for small supplied Markov chains."
+    />
+    <title>AbsorbLab | Success changes the path</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="eyebrow">ABSORBLAB / EXACT STOCHASTIC REASONING</p>
+        <h1>Success changes<br />the path.</h1>
+        <p class="intro">
+          A successful run is not a typical run. Follow the probability of first
+          arrival, then see how conditioning on success changes every decision
+          along the way.
+        </p>
+        <p class="scope">
+          A small, inspectable model for probabilistic AI workflows. Supplied
+          probabilities, exact fractions, no training, no API calls.
+        </p>
+      </header>
+      <section class="workspace">
+        <div>
+          <label for="control">Choose a thought experiment</label
+          ><select id="control"></select>
+          <p id="why"></p>
+          <label for="input">Supplied Markov chain / JSON</label
+          ><textarea
+            id="input"
+            spellcheck="false"
+            aria-describedby="input-help"
+          ></textarea>
+          <p id="input-help" class="small">
+            1-6 states. Positive rational strings. Each row sums exactly to one.
+            First success or failure ends the run.
+          </p>
+          <div class="buttons">
+            <button id="run">Analyze exactly</button
+            ><button id="download" disabled>Export certificate</button>
+          </div>
+          <p id="status" role="status"></p>
+        </div>
+        <div id="overview">
+          <p class="eyebrow">THE DISTINCTION</p>
+          <h2>Arrival, timing,<br />and selection.</h2>
+          <p>
+            Removing the next failure edge is not the same as conditioning on
+            eventual success. Paths that look safe now may fail later.
+          </p>
+          <p>
+            Closed cycles can avoid every terminal forever. The solver
+            identifies that mass before it solves the remaining exact linear
+            system.
+          </p>
+          <p>
+            Time given success can be finite even when unconditional time to
+            success is infinite. An impossible event has no conditional mean.
+          </p>
+          <div class="formula">Pʰ(i,j) = Pstop(i,j) h(j) / h(i)</div>
+          <p class="small">
+            Defined only when h(i) &gt; 0. Success terminal states stop
+            immediately, including at time zero.
+          </p>
+        </div>
+      </section>
+      <div id="results" hidden>
+        <section>
+          <p class="eyebrow">01 / OUTCOME</p>
+          <h2>What happens from here?</h2>
+          <label for="state">Starting state</label
+          ><select id="state"></select>
+          <div id="metrics" class="metrics"></div>
+          <div id="state-view" class="cards"></div>
+        </section>
+        <section>
+          <p class="eyebrow">02 / CONDITIONING</p>
+          <h2>Same chain. Different question.</h2>
+          <p>
+            Every original destination stays visible, even when its conditional
+            weight is zero. This is global eventual-success conditioning, not
+            local failure removal.
+          </p>
+          <div id="conditioned" class="cards"></div>
+        </section>
+        <section>
+          <p class="eyebrow">03 / FINITE HORIZON</p>
+          <h2>Where is the mass now?</h2>
+          <label for="step">Transitions taken</label
+          ><select id="step"></select>
+          <div id="forecast" class="cards"></div>
+          <div id="active" class="cards"></div>
+        </section>
+        <section>
+          <p class="eyebrow">04 / SUPPORT BEFORE ALGEBRA</p>
+          <h2>Not every cycle is transient.</h2>
+          <div id="components" class="cards"></div>
+          <label for="support">Reverse support expansion</label
+          ><select id="support"></select>
+          <div id="support-view" class="cards"></div>
+          <div id="path" class="cards"></div>
+        </section>
+        <section>
+          <p class="eyebrow">05 / REPLAYABLE EVIDENCE</p>
+          <h2>Inspect the exact system.</h2>
+          <p>
+            Only nonterminal states with a positive-probability terminal path
+            enter I-Q. Other nonterminal states have zero terminal-hit
+            probability. The browser uses determinant cofactors and dense
+            stopped-chain powers; the native implementation uses elimination and
+            active-flow propagation.
+          </p>
+          <div id="system" class="cards"></div>
+          <label for="elimination">Gauss-Jordan stage</label
+          ><select id="elimination"></select>
+          <pre id="stage"></pre>
+          <details>
+            <summary>Complete certificate JSON</summary>
+            <pre id="json"></pre>
+          </details>
+        </section>
+        <section>
+          <p class="eyebrow">BOUNDARIES / READ BEFORE REUSE</p>
+          <h2>A model, not a real-agent guarantee.</h2>
+          <ul id="limits"></ul>
+          <p>
+            These are established finite Markov-chain methods, not new
+            algorithms. Exact arithmetic does not make supplied probabilities
+            trustworthy.
+          </p>
+          <p>
+            See METHOD.md in the source repository for derivation and source
+            notes, and README.md for reproduction and tests.
+          </p>
+        </section>
+      </div>
+      <footer>
+        AbsorbLab · Dependency-free exact Python runtime and browser engine ·
+        Local computation only
+      </footer>
+    </main>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
