@@ -11,6 +11,21 @@ A workflow retries a tool call, enters a risky branch, reaches a goal, fails, or
 
 No trained model, service account, network inference or paid API. Python uses `Fraction`; the browser uses reduced `BigInt` fractions. Runtime dependencies: none.
 
+## New in 0.2: when may two states become one?
+
+The [interactive aggregation inspector](https://midya8.github.io/absorblab/lumping.html) finds the coarsest observation/status-respecting strong lumping of the original transition matrix. Follow a two-round split cascade, inspect every same-block mass obligation, compare all set partitions including noncontiguous blocks, and check the quotient identity `PC=CQ`. Exact arithmetic does not mean the distinct technical notion named "exact lumpability". This is strong/ordinary lumpability with exact rational arithmetic.
+
+```sh
+absorblab-lump examples/lumping.json --output /tmp/lumping.json
+absorblab-lump /tmp/lumping.json --verify
+# Equivalently: python -m absorblab.lumping_cli ...
+python tools/check_lumping_sympy.py  # optional SymPy 1.14.0
+```
+
+The full native suite now has 30 tests (16 first-hit +14 lumping). The lumping differential set contains 527 complete reports: 435 exhaustive small cases, 80 seeded rational chains and 12 authored controls. Native generation, independent all-partition replay and browser BigInt output agree on all 6,448 partition records, 637 refinement states and 4,038 quotient obligations. All 255 noninput primitive leaves of one full certificate were separately changed and rejected. The optional SymPy 1.14.0 matrix reference actually checks those 527 requests, all 6,448 partition mass matrices, 4,038 `PC=CQ` cells and 2,038 matrix-power equalities.
+
+Actual Chrome checks 36 lumping reports at 1280/390/320 pixels, 48 refinement states, 138 pair selections, 816 partition selections, 618 forecast selections, 345 graph edges and 12 trusted completed downloads replayed by the native checker. Set `LUMPING_SCREEN_DIR` to save full-page images or `ABSORBLAB_LUMPING_URL` to run the same checks against deployment. These finite comparisons are descriptive evidence, not a performance benchmark or a replacement for the all-step algebra. [LUMPING.md](LUMPING.md) states the contract, proof, sources and limits.
+
 ## A counterexample you can inspect
 
 In the default chain, `start` chooses `goal` or `risky` with probability `1/2` each. `risky` reaches `goal` with probability `1/4`, otherwise `fail`.
@@ -51,7 +66,7 @@ python -m http.server 8000 --directory docs
 Node 22+ and actual Chrome:
 
 ```sh
-node --test --test-concurrency=1 tests/test_engine.mjs tests/test_browser.cjs
+npm test
 # Optional environment overrides: PYTHON, CHROME_BIN.
 # ABSORBLAB_SCREEN_DIR=/tmp/absorblab-screens saves full-page captures.
 # ABSORBLAB_URL targets the same harness at a deployed page.
@@ -59,7 +74,7 @@ node --test --test-concurrency=1 tests/test_engine.mjs tests/test_browser.cjs
 
 The Chrome test checks the actual rendered controls and certificate, changes every starting state, horizon row, support round and elimination stage, and exports twelve files with trusted pointer clicks. It waits for browser download completion, reads actual downloaded bytes and replays each certificate through the native checker. DOM anchors alone do not count as an export.
 
-## Exact evidence, not just an answer
+## Exact first-hit evidence
 
 Every certificate contains the normalized input; original and stopped transition matrices; reverse-support rounds; a positive-support terminal path or its absence from every root; closed and nonclosed strongly connected components; the restricted `I-Q` system, boundary vectors and inverse; canonical Gauss-Jordan row-operation evidence; weighted success moments; every original and conditioned destination including zeros; and finite-horizon active mass and first-hit increments for every root.
 
@@ -69,7 +84,7 @@ The native generator uses reverse support, Tarjan components, exact Gauss-Jordan
 
 ## Checks and what they mean
 
-The native suite has 16 tests. It includes all 81 two-state uniform nonempty-support/status cases; all 729 deterministic three-state/status cases with a separate unique-path oracle; all 9,261 three-state uniform nonempty-support/status cases; 120 seeded rational chains; 120 acyclic weighted chains with a separate full-path moment oracle; state/edge permutation; schema caps; exact mass and moment equations; checker import isolation; atomic CLI output; and twenty full-report forged-field changes plus type failures.
+The original first-hit suite has 16 tests. It includes all 81 two-state uniform nonempty-support/status cases; all 729 deterministic three-state/status cases with a separate unique-path oracle; all 9,261 three-state uniform nonempty-support/status cases; 120 seeded rational chains; 120 acyclic weighted chains with a separate full-path moment oracle; state/edge permutation; schema caps; exact mass and moment equations; checker import isolation; atomic CLI output; and twenty full-report forged-field changes plus type failures.
 
 The browser-engine differential set has 213 full reports: twelve controls, 81 two-state cases, 120 seeded rational chains. All 682 state records, 4,284 forecast rows and 191 elimination stages agree exactly with Python. This is bounded descriptive agreement, not a proof or performance benchmark. The actual Chrome set runs twelve controls at 320, 390 and 1280 pixels: 36 reports, 120 state selections, 456 conditioned destination rows, 1,068 forecast rows, 75 support rounds, 45 elimination stages, twelve actual downloaded reports, and stale/invalid input checks. Integer JSON spelling and trailing-name/probability whitespace are rejected consistently with Python's input contract.
 
