@@ -1,9 +1,9 @@
 {
   "name": "absorblab",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test --test-concurrency=1 tests/test_engine.mjs tests/test_browser.cjs"
+    "test": "node --test --test-concurrency=1 tests/test_engine.mjs tests/test_browser.cjs tests/test_lumping_engine.mjs tests/test_lumping_browser.cjs"
   }
 }
