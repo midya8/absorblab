@@ -1,0 +1,37 @@
+{
+  "chain": {
+    "states": [
+      {
+        "name": "s0",
+        "transitions": [
+          {
+            "to": "s0",
+            "prob": "1/2"
+          },
+          {
+            "to": "s1",
+            "prob": "1/2"
+          }
+        ]
+      },
+      {
+        "name": "s1",
+        "transitions": [
+          {
+            "to": "s1",
+            "prob": "1"
+          }
+        ]
+      }
+    ],
+    "success": [
+      "s1"
+    ],
+    "failure": [],
+    "horizon": 6
+  },
+  "row": "s0",
+  "donor": "s0",
+  "receiver": "s1",
+  "at": "0"
+}
