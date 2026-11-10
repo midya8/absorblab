@@ -1,0 +1,77 @@
+{
+  "chain": {
+    "states": [
+      {
+        "name": "s0",
+        "transitions": [
+          {
+            "to": "s2",
+            "prob": "1"
+          }
+        ]
+      },
+      {
+        "name": "s1",
+        "transitions": [
+          {
+            "to": "s3",
+            "prob": "1"
+          }
+        ]
+      },
+      {
+        "name": "s2",
+        "transitions": [
+          {
+            "to": "s4",
+            "prob": "1"
+          }
+        ]
+      },
+      {
+        "name": "s3",
+        "transitions": [
+          {
+            "to": "s3",
+            "prob": "1/2"
+          },
+          {
+            "to": "s4",
+            "prob": "1/2"
+          }
+        ]
+      },
+      {
+        "name": "s4",
+        "transitions": [
+          {
+            "to": "s4",
+            "prob": "1"
+          }
+        ]
+      },
+      {
+        "name": "s5",
+        "transitions": [
+          {
+            "to": "s2",
+            "prob": "1"
+          }
+        ]
+      }
+    ],
+    "success": [
+      "s4"
+    ],
+    "failure": [],
+    "horizon": 5
+  },
+  "observations": [
+    "work",
+    "work",
+    "work",
+    "work",
+    "goal",
+    "work"
+  ]
+}

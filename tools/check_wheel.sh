@@ -9,8 +9,14 @@ import json,sys
 from absorblab import analyze
 json.dump([{'input':c['input'],'report':analyze(c['input'])}for c in json.load(open('docs/controls.json'))],open(sys.argv[1],'w'))
 PY
+python - "$tmp/lumping.json" <<'PY'
+import json,sys
+from absorblab.lumping import analyze_lumping
+json.dump([{'input':c['input'],'report':analyze_lumping(c['input'])}for c in json.load(open('docs/lumping-controls.json'))],open(sys.argv[1],'w'))
+PY
 python -m pip wheel --no-deps --wheel-dir "$tmp/wheels" "$root"
 python -m venv "$tmp/venv"
 "$tmp/venv/bin/python" -m pip install --no-deps "$tmp"/wheels/*.whl
 cd "$tmp"
 "$tmp/venv/bin/python" "$root/tools/verify_installed.py" "$tmp/expected.json"
+"$tmp/venv/bin/python" "$root/tools/verify_lumping_installed.py" "$tmp/lumping.json"

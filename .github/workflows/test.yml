@@ -26,7 +26,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - run: node --test --test-concurrency=1 tests/test_engine.mjs tests/test_browser.cjs
+      - run: node --test --test-concurrency=1 tests/test_engine.mjs tests/test_browser.cjs tests/test_lumping_engine.mjs tests/test_lumping_browser.cjs
   external-reference:
     runs-on: ubuntu-latest
     steps:
@@ -36,3 +36,4 @@ jobs:
           python-version: "3.13"
       - run: python -m pip install sympy==1.14.0
       - run: python tools/check_sympy.py
+      - run: python tools/check_lumping_sympy.py

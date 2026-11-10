@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Exact finite Markov lumpability: every block mass, refinement cascade, quotient identity and first-hit preservation record."
+    />
+    <title>AbsorbLab | Same now. Different next.</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="lumping.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <nav>
+          <a href="index.html">ABSORBLAB / FIRST HIT</a
+          ><a href="https://github.com/midya8/absorblab/blob/main/LUMPING.md"
+            >METHOD & SOURCES ↗</a
+          >
+        </nav>
+        <p class="eyebrow">
+          EXACT MARKOV AGGREGATION / PROBABILISTIC BISIMULATION
+        </p>
+        <h1>Same now.<br />Different next.</h1>
+        <p class="intro">
+          Two states can look identical one step from a goal, yet behave
+          differently after their successors split. Follow every block of
+          probability until no distinction remains. Then check what the smaller
+          chain preserves.
+        </p>
+        <p class="scope">
+          1-6 supplied states. Exact rational probabilities. Observations and
+          success/failure status are part of the contract. Established strong
+          lumpability, no learned similarity or approximate merging.
+        </p>
+      </header>
+      <section>
+        <p class="eyebrow">01 / DEFINE WHAT MUST STAY OBSERVABLE</p>
+        <h2>Not all merges ask<br />the same question.</h2>
+        <label for="control">Original synthetic control</label
+        ><select id="control"></select>
+        <p id="why"></p>
+        <details>
+          <summary>Edit the supplied chain and observation tags</summary>
+          <label for="input"
+            >Chain / observations JSON, one tag per state in order</label
+          ><textarea id="input" spellcheck="false"></textarea
+          ><button id="run">Refine exactly</button>
+        </details>
+        <p id="status" role="status" aria-live="polite">Loading controls.</p>
+      </section>
+      <div id="results" hidden>
+        <section>
+          <p class="eyebrow">02 / REFINE, THEN REFINE AGAIN</p>
+          <h2>A split has consequences.</h2>
+          <div id="summary" class="metrics"></div>
+          <label for="round">Synchronous partition-refinement round</label
+          ><select id="round"></select>
+          <div class="graphs">
+            <div>
+              <h3>Original states / current blocks</h3>
+              <svg
+                id="original-graph"
+                viewBox="0 0 400 400"
+                role="img"
+                aria-label="Original raw Markov chain colored by selected refinement blocks"
+              ></svg>
+              <p class="small">
+                Fill color shows current block membership. All original edges
+                remain, including terminal outgoing edges. State index labels
+                follow the input order.
+              </p>
+            </div>
+            <div>
+              <h3>Final quotient / one state per block</h3>
+              <svg
+                id="quotient-graph"
+                viewBox="0 0 400 400"
+                role="img"
+                aria-label="Exact final quotient Markov chain"
+              ></svg>
+              <p class="small">
+                q0, q1, ... refer to the final blocks below, not the selected
+                round's temporary block numbers. Every representative in a final
+                block has the same block-transition row.
+              </p>
+            </div>
+          </div>
+          <div id="round-summary" class="cards"></div>
+          <h3>Every state's probability mass into every current block</h3>
+          <p class="small">
+            Exact fractions. Tables scroll sideways on narrow screens. Rows in a
+            shared block must agree in every destination column.
+          </p>
+          <div class="scroll"><table id="mass-table"></table></div>
+          <h3>Every same-block pair obligation</h3>
+          <div class="scroll"><table id="pair-table"></table></div>
+          <details>
+            <summary>Complete selected refinement state</summary>
+            <pre id="round-json"></pre>
+          </details>
+        </section>
+        <section>
+          <p class="eyebrow">03 / EXPLAIN A MERGE OR A SPLIT</p>
+          <h2>Which block tells them apart?</h2>
+          <label for="pair">State pair</label
+          ><select id="pair"></select>
+          <div id="pair-summary" class="cards"></div>
+          <button id="open-split">Open the separating round</button>
+          <p class="small">
+            A split witness names a block in an earlier refinement, not an
+            arbitrary subset invented after the split. Observation/status
+            conflicts are separate from transition-mass conflicts.
+          </p>
+          <h3>Final block membership and observation contract</h3>
+          <div class="scroll"><table id="block-table"></table></div>
+          <h3>P C = C Q / every state-to-block obligation</h3>
+          <p class="small">
+            C is the original-state-to-final-block indicator matrix. This
+            one-step identity implies Pⁿ C = C Qⁿ for every n. The selected
+            display horizon is not a proof by testing a few steps.
+          </p>
+          <div class="scroll"><table id="identity-table"></table></div>
+        </section>
+        <section>
+          <p class="eyebrow">04 / CHECK EVERY SET PARTITION</p>
+          <h2>Coarsest is a global claim.</h2>
+          <p>
+            Every partition is retained, including noncontiguous blocks and the
+            one-block/discrete extremes. Every allowed partition must refine the
+            final one. A partition can be stable yet violate observations, or
+            respect observations yet fail the block-mass criterion.
+          </p>
+          <label for="partition">Candidate partition</label
+          ><select id="partition"></select>
+          <div id="partition-summary" class="cards"></div>
+          <div class="scroll"><table id="partition-masses"></table></div>
+          <div class="scroll atlas"><table id="atlas"></table></div>
+          <details>
+            <summary>Complete selected partition evidence</summary>
+            <pre id="partition-json"></pre>
+          </details>
+        </section>
+        <section>
+          <p class="eyebrow">
+            05 / SAME BLOCK DISTRIBUTIONS, SAME FIRST-HIT ANSWERS
+          </p>
+          <h2>Smaller chain.<br />Same observable question.</h2>
+          <label for="state">Original starting state</label
+          ><select id="state"></select
+          ><label for="step">Transitions in the raw chain</label
+          ><select id="step"></select>
+          <div id="forecast-summary" class="cards"></div>
+          <div class="scroll"><table id="forecast-table"></table></div>
+          <h3>First-hit records, original versus quotient</h3>
+          <p class="small">
+            The first-hit calculation stops at success/failure; the raw-chain
+            aggregation above does not. Statewise raw-chain equivalence can be
+            stronger than needed for a particular hitting question. Undefined
+            conditional times stay undefined.
+          </p>
+          <div class="scroll"><table id="hit-table"></table></div>
+          <button id="download">
+            Download independently checkable certificate
+          </button>
+        </section>
+        <section>
+          <p class="eyebrow">METHOD / EXACT, SMALL AND EXPLICIT</p>
+          <h2>Every representative agrees.<br />Averages cannot settle it.</h2>
+          <p>
+            The native engine groups exact block-mass signatures. Its
+            independent checker enumerates every set partition, finds the unique
+            coarsest allowed partition, and reconstructs each round using pair
+            equivalence. Matrix-power forecasts and determinant/cofactor
+            first-hit replay are separate from the generator's vector updates
+            and Gauss-Jordan solve. An optional SymPy rational-matrix check
+            supplies another reference.
+          </p>
+          <pre>
+absorblab-lump examples/lumping.json --output report.json
+absorblab-lump report.json --verify</pre>
+          <ul id="limits"></ul>
+          <details>
+            <summary>Complete certificate</summary>
+            <pre id="report-json"></pre>
+          </details>
+        </section>
+      </div>
+      <footer>
+        AbsorbLab / supplied finite stochastic reasoning /
+        <a href="https://github.com/midya8/absorblab">source</a> /
+        <a href="https://github.com/midya8/absorblab/blob/main/LUMPING.md"
+          >method and inspected foundations</a
+        >
+      </footer>
+    </main>
+    <script type="module" src="lumping-app.js"></script>
+  </body>
+</html>

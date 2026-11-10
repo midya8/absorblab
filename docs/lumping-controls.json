@@ -1,0 +1,522 @@
+[
+  {
+    "name": "A split has consequences",
+    "why": "s0,s1,s5 have equal immediate goal probability. Splitting their successors forces s1 apart later; s0 and s5 still merge. No averaging is used.",
+    "input": {
+      "chain": {
+        "states": [
+          {
+            "name": "s0",
+            "transitions": [
+              {
+                "to": "s2",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s1",
+            "transitions": [
+              {
+                "to": "s3",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s2",
+            "transitions": [
+              {
+                "to": "s4",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s3",
+            "transitions": [
+              {
+                "to": "s3",
+                "prob": "1/2"
+              },
+              {
+                "to": "s4",
+                "prob": "1/2"
+              }
+            ]
+          },
+          {
+            "name": "s4",
+            "transitions": [
+              {
+                "to": "s4",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s5",
+            "transitions": [
+              {
+                "to": "s2",
+                "prob": "1"
+              }
+            ]
+          }
+        ],
+        "success": ["s4"],
+        "failure": [],
+        "horizon": 5
+      },
+      "observations": ["work", "work", "work", "work", "goal", "work"]
+    }
+  },
+  {
+    "name": "Equal blocks, different rows",
+    "why": "s0 and s2 have different individual successor rows but the same mass into every observed block. Comparing entire rows is unnecessarily strict.",
+    "input": {
+      "chain": {
+        "states": [
+          {
+            "name": "s0",
+            "transitions": [
+              {
+                "to": "s1",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s1",
+            "transitions": [
+              {
+                "to": "s0",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s2",
+            "transitions": [
+              {
+                "to": "s3",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s3",
+            "transitions": [
+              {
+                "to": "s2",
+                "prob": "1"
+              }
+            ]
+          }
+        ],
+        "success": [],
+        "failure": [],
+        "horizon": 5
+      },
+      "observations": ["a", "b", "a", "b"]
+    }
+  },
+  {
+    "name": "Exact, not almost equal",
+    "why": "A rational difference of one millionth still splits states; numerical tolerance would change the equivalence.",
+    "input": {
+      "chain": {
+        "states": [
+          {
+            "name": "s0",
+            "transitions": [
+              {
+                "to": "s2",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s1",
+            "transitions": [
+              {
+                "to": "s0",
+                "prob": "1/1000000"
+              },
+              {
+                "to": "s2",
+                "prob": "999999/1000000"
+              }
+            ]
+          },
+          {
+            "name": "s2",
+            "transitions": [
+              {
+                "to": "s2",
+                "prob": "1"
+              }
+            ]
+          }
+        ],
+        "success": ["s2"],
+        "failure": [],
+        "horizon": 5
+      },
+      "observations": ["work", "work", "goal"]
+    }
+  },
+  {
+    "name": "Terminal status is observable",
+    "why": "Success and failure are never merged even if the supplied tag is identical.",
+    "input": {
+      "chain": {
+        "states": [
+          {
+            "name": "s0",
+            "transitions": [
+              {
+                "to": "s0",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s1",
+            "transitions": [
+              {
+                "to": "s1",
+                "prob": "1"
+              }
+            ]
+          }
+        ],
+        "success": ["s0"],
+        "failure": ["s1"],
+        "horizon": 5
+      },
+      "observations": ["same", "same"]
+    }
+  },
+  {
+    "name": "Outgoing terminal edges still count",
+    "why": "Both initial success states have identical first-hit records. Raw-chain equivalence is stronger and can split them because their outgoing transitions differ.",
+    "input": {
+      "chain": {
+        "states": [
+          {
+            "name": "s0",
+            "transitions": [
+              {
+                "to": "s2",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s1",
+            "transitions": [
+              {
+                "to": "s1",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s2",
+            "transitions": [
+              {
+                "to": "s2",
+                "prob": "1"
+              }
+            ]
+          }
+        ],
+        "success": ["s0", "s1"],
+        "failure": [],
+        "horizon": 5
+      },
+      "observations": ["same", "same", "same"]
+    }
+  },
+  {
+    "name": "One unlabeled block is trivial",
+    "why": "With one tag and no terminal sets the all-state partition is stable, whatever the rows. Observations determine what must be preserved.",
+    "input": {
+      "chain": {
+        "states": [
+          {
+            "name": "s0",
+            "transitions": [
+              {
+                "to": "s1",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s1",
+            "transitions": [
+              {
+                "to": "s0",
+                "prob": "1/2"
+              },
+              {
+                "to": "s2",
+                "prob": "1/2"
+              }
+            ]
+          },
+          {
+            "name": "s2",
+            "transitions": [
+              {
+                "to": "s2",
+                "prob": "1"
+              }
+            ]
+          }
+        ],
+        "success": [],
+        "failure": [],
+        "horizon": 5
+      },
+      "observations": ["same", "same", "same"]
+    }
+  },
+  {
+    "name": "An absorbing success",
+    "why": "A one-state quotient and zero arrival time are valid, not missing evidence.",
+    "input": {
+      "chain": {
+        "states": [
+          {
+            "name": "s0",
+            "transitions": [
+              {
+                "to": "s0",
+                "prob": "1"
+              }
+            ]
+          }
+        ],
+        "success": ["s0"],
+        "failure": [],
+        "horizon": 5
+      },
+      "observations": ["goal"]
+    }
+  },
+  {
+    "name": "Closed nonterminal class",
+    "why": "Never reaching a terminal remains probability one after quotienting.",
+    "input": {
+      "chain": {
+        "states": [
+          {
+            "name": "s0",
+            "transitions": [
+              {
+                "to": "s1",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s1",
+            "transitions": [
+              {
+                "to": "s0",
+                "prob": "1"
+              }
+            ]
+          }
+        ],
+        "success": [],
+        "failure": [],
+        "horizon": 5
+      },
+      "observations": ["work", "work"]
+    }
+  },
+  {
+    "name": "Success and failure branches",
+    "why": "Equivalent starts share both hitting probabilities and conditional moments.",
+    "input": {
+      "chain": {
+        "states": [
+          {
+            "name": "s0",
+            "transitions": [
+              {
+                "to": "s2",
+                "prob": "1/3"
+              },
+              {
+                "to": "s3",
+                "prob": "2/3"
+              }
+            ]
+          },
+          {
+            "name": "s1",
+            "transitions": [
+              {
+                "to": "s2",
+                "prob": "1/3"
+              },
+              {
+                "to": "s3",
+                "prob": "2/3"
+              }
+            ]
+          },
+          {
+            "name": "s2",
+            "transitions": [
+              {
+                "to": "s2",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s3",
+            "transitions": [
+              {
+                "to": "s3",
+                "prob": "1"
+              }
+            ]
+          }
+        ],
+        "success": ["s2"],
+        "failure": ["s3"],
+        "horizon": 5
+      },
+      "observations": ["work", "work", "end", "end"]
+    }
+  },
+  {
+    "name": "A zero-horizon audit",
+    "why": "The structural criterion is still checked at horizon zero. A finite display horizon does not establish lumpability.",
+    "input": {
+      "chain": {
+        "states": [
+          {
+            "name": "s0",
+            "transitions": [
+              {
+                "to": "s1",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s1",
+            "transitions": [
+              {
+                "to": "s1",
+                "prob": "1"
+              }
+            ]
+          }
+        ],
+        "success": ["s1"],
+        "failure": [],
+        "horizon": 0
+      },
+      "observations": ["same", "goal"]
+    }
+  },
+  {
+    "name": "Noncontiguous twins",
+    "why": "Equivalent indices need not form contiguous runs. Every set partition, not just interval partitions, is checked.",
+    "input": {
+      "chain": {
+        "states": [
+          {
+            "name": "s0",
+            "transitions": [
+              {
+                "to": "s1",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s1",
+            "transitions": [
+              {
+                "to": "s2",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s2",
+            "transitions": [
+              {
+                "to": "s3",
+                "prob": "1"
+              }
+            ]
+          },
+          {
+            "name": "s3",
+            "transitions": [
+              {
+                "to": "s0",
+                "prob": "1"
+              }
+            ]
+          }
+        ],
+        "success": [],
+        "failure": [],
+        "horizon": 5
+      },
+      "observations": ["a", "b", "a", "b"]
+    }
+  },
+  {
+    "name": "All observations distinct",
+    "why": "No merge is allowed when every observation differs, even for identical probability rows.",
+    "input": {
+      "chain": {
+        "states": [
+          {
+            "name": "s0",
+            "transitions": [
+              {
+                "to": "s0",
+                "prob": "1/2"
+              },
+              {
+                "to": "s1",
+                "prob": "1/2"
+              }
+            ]
+          },
+          {
+            "name": "s1",
+            "transitions": [
+              {
+                "to": "s0",
+                "prob": "1/2"
+              },
+              {
+                "to": "s1",
+                "prob": "1/2"
+              }
+            ]
+          }
+        ],
+        "success": [],
+        "failure": [],
+        "horizon": 5
+      },
+      "observations": ["first", "second"]
+    }
+  }
+]

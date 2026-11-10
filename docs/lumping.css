@@ -1,0 +1,162 @@
+nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+  font:
+    12px/1.7 ui-monospace,
+    monospace;
+  margin-bottom: 44px;
+}
+h1 {
+  font-size: clamp(50px, 7vw, 88px);
+}
+.scroll {
+  overflow: auto;
+  max-width: 100%;
+  border: 1px solid #bfcac0;
+  margin: 22px 0;
+}
+.atlas {
+  max-height: 330px;
+}
+.atlas thead {
+  position: sticky;
+  top: 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+  font:
+    12px/1.7 ui-monospace,
+    monospace;
+  text-align: left;
+}
+th,
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #cbd3ca;
+  vertical-align: top;
+}
+th {
+  background: #e2e9de;
+}
+tr.selected td {
+  background: #e2e9de;
+  font-weight: 700;
+}
+.graphs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 35px;
+  margin: 25px 0;
+}
+.graphs > div {
+  min-width: 0;
+}
+svg {
+  width: 100%;
+  height: auto;
+  background: #fcfcf7;
+  border: 1px solid #ccd4ca;
+  display: block;
+}
+svg .edge {
+  stroke: #7f9188;
+  stroke-width: 1.7;
+  fill: none;
+}
+svg .edge-label {
+  font:
+    13px ui-monospace,
+    monospace;
+  fill: #3d554b;
+  paint-order: stroke;
+  stroke: #fcfcf7;
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+svg .node {
+  stroke: #36564c;
+  stroke-width: 1.6;
+}
+svg .node-label {
+  font:
+    20px ui-monospace,
+    monospace;
+  fill: #132d2c;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+details {
+  margin: 20px 0;
+  border-top: 1px solid #bfcac0;
+}
+summary {
+  font-size: 14px;
+}
+textarea {
+  height: 340px;
+}
+#download {
+  margin: 20px 0;
+}
+#open-split:disabled {
+  display: none;
+}
+#limits {
+  padding-left: 18px;
+  font-size: 13px;
+  color: #4d625c;
+}
+#limits li {
+  margin: 12px 0;
+}
+.cards .card p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.metric strong {
+  font-size: 30px;
+}
+header .scope {
+  max-width: 90ch;
+}
+@media (max-width: 720px) {
+  .graphs {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .graphs svg {
+    max-width: 430px;
+    margin: auto;
+  }
+  nav {
+    margin-bottom: 30px;
+  }
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+  .metric {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+  }
+  .metric span {
+    margin: 0;
+  }
+  .metric strong {
+    font-size: 26px;
+  }
+  h1 {
+    font-size: clamp(48px, 14vw, 72px);
+  }
+  h2 {
+    overflow-wrap: break-word;
+  }
+}
