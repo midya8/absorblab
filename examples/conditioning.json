@@ -1,0 +1,55 @@
+{
+  "states": [
+    {
+      "name": "start",
+      "transitions": [
+        {
+          "to": "goal",
+          "prob": "1/2"
+        },
+        {
+          "to": "risky",
+          "prob": "1/2"
+        }
+      ]
+    },
+    {
+      "name": "risky",
+      "transitions": [
+        {
+          "to": "goal",
+          "prob": "1/4"
+        },
+        {
+          "to": "fail",
+          "prob": "3/4"
+        }
+      ]
+    },
+    {
+      "name": "goal",
+      "transitions": [
+        {
+          "to": "goal",
+          "prob": "1"
+        }
+      ]
+    },
+    {
+      "name": "fail",
+      "transitions": [
+        {
+          "to": "fail",
+          "prob": "1"
+        }
+      ]
+    }
+  ],
+  "success": [
+    "goal"
+  ],
+  "failure": [
+    "fail"
+  ],
+  "horizon": 8
+}
