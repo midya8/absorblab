@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "absorblab"
+version = "0.1.0"
+description = "Exact finite Markov first-hit probabilities and success-conditioned paths"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+[project.scripts]
+absorblab = "absorblab.__main__:main"
+[tool.setuptools]
+packages = ["absorblab"]

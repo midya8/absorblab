@@ -1,0 +1,595 @@
+[
+  {
+    "id": "global",
+    "title": "Conditioning looks beyond the next edge",
+    "why": "Original start choices are equal, but risky succeeds only 1/4 of the time. Conditional on eventual success, risky gets 1/5, direct goal 4/5. Mean time to any terminal is 3/2; mean given success is 6/5; unconditional stopped-success time is infinite.",
+    "input": {
+      "states": [
+        {
+          "name": "start",
+          "transitions": [
+            {
+              "to": "goal",
+              "prob": "1/2"
+            },
+            {
+              "to": "risky",
+              "prob": "1/2"
+            }
+          ]
+        },
+        {
+          "name": "risky",
+          "transitions": [
+            {
+              "to": "goal",
+              "prob": "1/4"
+            },
+            {
+              "to": "fail",
+              "prob": "3/4"
+            }
+          ]
+        },
+        {
+          "name": "goal",
+          "transitions": [
+            {
+              "to": "goal",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "fail",
+          "transitions": [
+            {
+              "to": "fail",
+              "prob": "1"
+            }
+          ]
+        }
+      ],
+      "success": [
+        "goal"
+      ],
+      "failure": [
+        "fail"
+      ],
+      "horizon": 8
+    }
+  },
+  {
+    "id": "retry",
+    "title": "Almost sure does not mean a bounded deadline",
+    "why": "Each retry has success probability 1/4. Eventual success is certain and the mean is 4, but every finite deadline still has a positive survival probability.",
+    "input": {
+      "states": [
+        {
+          "name": "retry",
+          "transitions": [
+            {
+              "to": "retry",
+              "prob": "3/4"
+            },
+            {
+              "to": "goal",
+              "prob": "1/4"
+            }
+          ]
+        },
+        {
+          "name": "goal",
+          "transitions": [
+            {
+              "to": "goal",
+              "prob": "1"
+            }
+          ]
+        }
+      ],
+      "success": [
+        "goal"
+      ],
+      "failure": [],
+      "horizon": 8
+    }
+  },
+  {
+    "id": "competing",
+    "title": "Retries before either outcome",
+    "why": "At each step, retry with 1/2, succeed with 1/8 and fail with 3/8. Eventual success is 1/4; conditioned on success, waiting still has mean 2.",
+    "input": {
+      "states": [
+        {
+          "name": "retry",
+          "transitions": [
+            {
+              "to": "retry",
+              "prob": "1/2"
+            },
+            {
+              "to": "goal",
+              "prob": "1/8"
+            },
+            {
+              "to": "fail",
+              "prob": "3/8"
+            }
+          ]
+        },
+        {
+          "name": "goal",
+          "transitions": [
+            {
+              "to": "goal",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "fail",
+          "transitions": [
+            {
+              "to": "fail",
+              "prob": "1"
+            }
+          ]
+        }
+      ],
+      "success": [
+        "goal"
+      ],
+      "failure": [
+        "fail"
+      ],
+      "horizon": 8
+    }
+  },
+  {
+    "id": "trap",
+    "title": "A nonterminal closed class is not absorption",
+    "why": "Start reaches success, failure or a two-state nonterminal recurrent class with equal probability. Success plus failure is only 2/3; the restricted inverse excludes the trap instead of choosing an arbitrary harmonic value.",
+    "input": {
+      "states": [
+        {
+          "name": "start",
+          "transitions": [
+            {
+              "to": "goal",
+              "prob": "1/3"
+            },
+            {
+              "to": "fail",
+              "prob": "1/3"
+            },
+            {
+              "to": "left",
+              "prob": "1/3"
+            }
+          ]
+        },
+        {
+          "name": "left",
+          "transitions": [
+            {
+              "to": "right",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "right",
+          "transitions": [
+            {
+              "to": "left",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "goal",
+          "transitions": [
+            {
+              "to": "goal",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "fail",
+          "transitions": [
+            {
+              "to": "fail",
+              "prob": "1"
+            }
+          ]
+        }
+      ],
+      "success": [
+        "goal"
+      ],
+      "failure": [
+        "fail"
+      ],
+      "horizon": 8
+    }
+  },
+  {
+    "id": "terminal",
+    "title": "First hit ignores later outgoing rows",
+    "why": "Goal points to failure and failure points to goal in the supplied chain. Both stop at the first hit, so goal starts succeed in zero steps and failure starts cannot later succeed.",
+    "input": {
+      "states": [
+        {
+          "name": "start",
+          "transitions": [
+            {
+              "to": "goal",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "goal",
+          "transitions": [
+            {
+              "to": "fail",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "fail",
+          "transitions": [
+            {
+              "to": "goal",
+              "prob": "1"
+            }
+          ]
+        }
+      ],
+      "success": [
+        "goal"
+      ],
+      "failure": [
+        "fail"
+      ],
+      "horizon": 8
+    }
+  },
+  {
+    "id": "no-terminal",
+    "title": "No terminals: every conditional success is undefined",
+    "why": "A closed two-state cycle has no success or failure terminal. Never hitting any terminal has probability one; it is not a numerical singular-system error.",
+    "input": {
+      "states": [
+        {
+          "name": "left",
+          "transitions": [
+            {
+              "to": "right",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "right",
+          "transitions": [
+            {
+              "to": "left",
+              "prob": "1"
+            }
+          ]
+        }
+      ],
+      "success": [],
+      "failure": [],
+      "horizon": 8
+    }
+  },
+  {
+    "id": "all-terminal",
+    "title": "Every root is already stopped",
+    "why": "Success roots have zero first-hit time; failure-root success conditioning remains undefined. Supplied outgoing edges do not undo first-hit success or failure.",
+    "input": {
+      "states": [
+        {
+          "name": "a",
+          "transitions": [
+            {
+              "to": "b",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "b",
+          "transitions": [
+            {
+              "to": "a",
+              "prob": "1"
+            }
+          ]
+        }
+      ],
+      "success": [
+        "a"
+      ],
+      "failure": [
+        "b"
+      ],
+      "horizon": 8
+    }
+  },
+  {
+    "id": "rare",
+    "title": "Rare success can have a very long finite mean",
+    "why": "A positive 1/1000000 success probability per retry makes eventual success certain, mean 1000000 and variance 999999000000. Small finite-horizon mass is not zero eventual success.",
+    "input": {
+      "states": [
+        {
+          "name": "retry",
+          "transitions": [
+            {
+              "to": "retry",
+              "prob": "999999/1000000"
+            },
+            {
+              "to": "goal",
+              "prob": "1/1000000"
+            }
+          ]
+        },
+        {
+          "name": "goal",
+          "transitions": [
+            {
+              "to": "goal",
+              "prob": "1"
+            }
+          ]
+        }
+      ],
+      "success": [
+        "goal"
+      ],
+      "failure": [],
+      "horizon": 12
+    }
+  },
+  {
+    "id": "five",
+    "title": "Five original transitions before first success",
+    "why": "A deterministic six-state chain reaches the final goal after exactly five transitions. The goal root itself is time zero.",
+    "input": {
+      "states": [
+        {
+          "name": "s0",
+          "transitions": [
+            {
+              "to": "s1",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "s1",
+          "transitions": [
+            {
+              "to": "s2",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "s2",
+          "transitions": [
+            {
+              "to": "s3",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "s3",
+          "transitions": [
+            {
+              "to": "s4",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "s4",
+          "transitions": [
+            {
+              "to": "s5",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "s5",
+          "transitions": [
+            {
+              "to": "s5",
+              "prob": "1"
+            }
+          ]
+        }
+      ],
+      "success": [
+        "s5"
+      ],
+      "failure": [],
+      "horizon": 6
+    }
+  },
+  {
+    "id": "multiple",
+    "title": "Two success terminals, one first-hit event",
+    "why": "Success is reaching either declared goal before failure. It is not a requirement to visit both goals.",
+    "input": {
+      "states": [
+        {
+          "name": "start",
+          "transitions": [
+            {
+              "to": "a",
+              "prob": "1/3"
+            },
+            {
+              "to": "b",
+              "prob": "1/3"
+            },
+            {
+              "to": "fail",
+              "prob": "1/3"
+            }
+          ]
+        },
+        {
+          "name": "a",
+          "transitions": [
+            {
+              "to": "fail",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "b",
+          "transitions": [
+            {
+              "to": "fail",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "fail",
+          "transitions": [
+            {
+              "to": "start",
+              "prob": "1"
+            }
+          ]
+        }
+      ],
+      "success": [
+        "a",
+        "b"
+      ],
+      "failure": [
+        "fail"
+      ],
+      "horizon": 8
+    }
+  },
+  {
+    "id": "unreachable",
+    "title": "An isolated success does not rescue a trap root",
+    "why": "The success state exists but cannot be reached from the closed nonterminal component. Zero hit probability means no success-conditioned row or mean is defined.",
+    "input": {
+      "states": [
+        {
+          "name": "left",
+          "transitions": [
+            {
+              "to": "right",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "right",
+          "transitions": [
+            {
+              "to": "left",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "goal",
+          "transitions": [
+            {
+              "to": "goal",
+              "prob": "1"
+            }
+          ]
+        }
+      ],
+      "success": [
+        "goal"
+      ],
+      "failure": [],
+      "horizon": 8
+    }
+  },
+  {
+    "id": "cyclic",
+    "title": "A cyclic transient block still has an exact inverse",
+    "why": "Two nonterminal states communicate and both can exit. Full equations include repeated visits, not just the mass of simple paths.",
+    "input": {
+      "states": [
+        {
+          "name": "a",
+          "transitions": [
+            {
+              "to": "a",
+              "prob": "1/4"
+            },
+            {
+              "to": "b",
+              "prob": "1/2"
+            },
+            {
+              "to": "goal",
+              "prob": "1/4"
+            }
+          ]
+        },
+        {
+          "name": "b",
+          "transitions": [
+            {
+              "to": "a",
+              "prob": "1/3"
+            },
+            {
+              "to": "fail",
+              "prob": "2/3"
+            }
+          ]
+        },
+        {
+          "name": "goal",
+          "transitions": [
+            {
+              "to": "goal",
+              "prob": "1"
+            }
+          ]
+        },
+        {
+          "name": "fail",
+          "transitions": [
+            {
+              "to": "fail",
+              "prob": "1"
+            }
+          ]
+        }
+      ],
+      "success": [
+        "goal"
+      ],
+      "failure": [
+        "fail"
+      ],
+      "horizon": 8
+    }
+  }
+]
