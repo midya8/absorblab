@@ -3,12 +3,13 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 [project]
 name = "absorblab"
-version = "0.2.0"
+version = "0.3.0"
 description = "Exact finite Markov first-hit probabilities and success-conditioned paths and labeled strong lumpability"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 [project.scripts]
 absorblab = "absorblab.__main__:main"
 absorblab-lump = "absorblab.lumping_cli:main"
+absorblab-response = "absorblab.response_cli:main"
 [tool.setuptools]
 packages = ["absorblab"]
