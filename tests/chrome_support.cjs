@@ -35,3 +35,68 @@ async function waitForDebugger(
   );
 }
 module.exports = { waitForDebugger };
+
+// setup-chrome may launch Chrome through a short-lived wrapper. Waiting only for
+// that wrapper's exit leaves its children writing the profile during removal.
+// Each test owns a detached POSIX process group; terminate that group, not any
+// other Chrome session. Bounded waits here are teardown only, not test retries.
+async function stopChrome(browser) {
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const signalGroup = (signal) => {
+    try {
+      process.kill(-browser.pid, signal);
+    } catch (e) {
+      if (e.code !== "ESRCH") throw e;
+    }
+  };
+  const groupAlive = () => {
+    try {
+      process.kill(-browser.pid, 0);
+      return true;
+    } catch (e) {
+      if (e.code === "ESRCH") return false;
+      throw e;
+    }
+  };
+  if (!browser.pid) return;
+  signalGroup("SIGTERM");
+  for (let i = 0; i < 100 && groupAlive(); i++) await sleep(20);
+  if (groupAlive()) {
+    signalGroup("SIGKILL");
+    // A just-killed process may briefly retain an open write before teardown.
+    for (let i = 0; i < 50 && groupAlive(); i++) await sleep(20);
+  }
+  if (browser.exitCode === null && browser.signalCode === null)
+    await Promise.race([
+      new Promise((r) => browser.once("exit", r)),
+      sleep(1000),
+    ]);
+}
+module.exports.stopChrome = stopChrome;
+
+// Download destinations may exist while Chrome is still flushing their bytes.
+// Wait only for transport completion; parse and evidence assertions run once.
+async function waitForDownload(
+  file,
+  expectedBytes,
+  { timeoutMs = 10000, pollMs = 20 } = {},
+) {
+  const fs = require("node:fs");
+  if (!Number.isInteger(expectedBytes) || expectedBytes < 1)
+    throw new TypeError("expected download byte count must be positive");
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    try {
+      const size = fs.statSync(file).size;
+      if (size > expectedBytes)
+        throw Error("download exceeds expected byte count");
+      if (size === expectedBytes && !fs.existsSync(file + ".crdownload"))
+        return;
+    } catch (e) {
+      if (e.code !== "ENOENT") throw e;
+    }
+    await new Promise((r) => setTimeout(r, pollMs));
+  }
+  throw Error("download did not complete within " + timeoutMs + "ms: " + file);
+}
+module.exports.waitForDownload = waitForDownload;
