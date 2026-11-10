@@ -11,6 +11,14 @@ A workflow retries a tool call, enters a risky branch, reaches a goal, fails, or
 
 No trained model, service account, network inference or paid API. Python uses `Fraction`; the browser uses reduced `BigInt` fractions. Runtime dependencies: none.
 
+## New in 0.3: the last exit changes everything
+
+[Open the row-response and traffic inspector](https://midya8.github.io/absorblab/response.html) | [Derivation, source ledger and limits](RESPONSE.md)
+
+Move probability mass between two destinations of one nonterminal row. Inspect the full exact interior rational success/failure response, its derivatives and separately solved endpoints. In the original default control, success stays one however unlikely the exit becomes, then drops to zero when the last exit disappears. Interior limits do not replace endpoint answers. A retry control has nonzero curvature rather than a deliberately flat baseline.
+
+Success-conditioned state visits and every directed edge traversal expose where successful paths actually go, including retries and the final success arrival. Zero-success traffic is undefined; terminal outgoing edges do not count. Native rank-one generation, independent Cramer/cofactor replay and a BigInt browser retain all prior first-hit and aggregation workflows. See [RESPONSE.md](RESPONSE.md) for the reproducible finite checks and exact domain. Supplied probabilities, not learned behavior, causal effects or a general parameter-synthesis solver.
+
 ## New in 0.2: when may two states become one?
 
 The [interactive aggregation inspector](https://midya8.github.io/absorblab/lumping.html) finds the coarsest observation/status-respecting strong lumping of the original transition matrix. Follow a two-round split cascade, inspect every same-block mass obligation, compare all set partitions including noncontiguous blocks, and check the quotient identity `PC=CQ`. Exact arithmetic does not mean the distinct technical notion named "exact lumpability". This is strong/ordinary lumpability with exact rational arithmetic.
