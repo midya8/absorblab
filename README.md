@@ -1,6 +1,6 @@
 # AbsorbLab
 
-**Success changes the path.** Exact first-hit probability, conditional time and Doob transforms for small supplied Markov chains.
+AbsorbLab computes exact first-hit probabilities, conditional times and Doob transforms for small supplied Markov chains.
 
 A workflow retries a tool call, enters a risky branch, reaches a goal, fails, or gets stuck in a closed cycle. AbsorbLab separates questions that are easy to mix up:
 
@@ -11,28 +11,42 @@ A workflow retries a tool call, enters a risky branch, reaches a goal, fails, or
 
 No trained model, service account, network inference or paid API. Python uses `Fraction`; the browser uses reduced `BigInt` fractions. Runtime dependencies: none.
 
-## New in 0.3: the last exit changes everything
+## Start with a question
 
-[Open the row-response and traffic inspector](https://midya8.github.io/absorblab/response.html) | [Derivation, source ledger and limits](RESPONSE.md)
+| Question | Inspector | What to look for |
+| --- | --- | --- |
+| Will the chain reach success, fail, or stay in a closed cycle? | [First hit](https://midya8.github.io/absorblab/) | First-hit mass, conditional time, support and elimination steps, finite-horizon forecasts. |
+| Can states be grouped without changing block-transition probabilities? | [Strong lumping](https://midya8.github.io/absorblab/lumping.html) | Refinement splits, every set partition, same-block obligations and the quotient identity `PC=CQ`. |
+| What happens when probability moves within one row? | [Row response and traffic](https://midya8.github.io/absorblab/response.html) | Exact rational interior curves, derivatives, separately solved endpoints and successful-path visits and edge counts. |
 
-Move probability mass between two destinations of one nonterminal row. Inspect the full exact interior rational success/failure response, its derivatives and separately solved endpoints. In the original default control, success stays one however unlikely the exit becomes, then drops to zero when the last exit disappears. Interior limits do not replace endpoint answers. A retry control has nonzero curvature rather than a deliberately flat baseline.
+Conditioning selects successful trajectories. It does not improve the original
+workflow. Strong lumping concerns the original transition matrix; first-hit
+analysis stops at supplied terminals. "Exact" means rational arithmetic here,
+not the distinct condition called exact lumpability.
 
-Success-conditioned state visits and every directed edge traversal expose where successful paths actually go, including retries and the final success arrival. Zero-success traffic is undefined; terminal outgoing edges do not count. Native rank-one generation, independent Cramer/cofactor replay and a BigInt browser retain all prior first-hit and aggregation workflows. See [RESPONSE.md](RESPONSE.md) for the reproducible finite checks and exact domain. Supplied probabilities, not learned behavior, causal effects or a general parameter-synthesis solver.
+### An exit can disappear
 
-## New in 0.2: when may two states become one?
+The row-response default has a self-loop and a goal edge, each with probability
+`1/2`. Move mass from the loop to the goal. As long as the goal edge remains
+positive, eventual success is one, even when the wait is very long. When the
+last exit disappears, actual success becomes zero. The one-sided interior
+limit is still one; it is not the endpoint answer.
 
-The [interactive aggregation inspector](https://midya8.github.io/absorblab/lumping.html) finds the coarsest observation/status-respecting strong lumping of the original transition matrix. Follow a two-round split cascade, inspect every same-block mass obligation, compare all set partitions including noncontiguous blocks, and check the quotient identity `PC=CQ`. Exact arithmetic does not mean the distinct technical notion named "exact lumpability". This is strong/ordinary lumpability with exact rational arithmetic.
+A second retry control has success probability `(1/4+t)/(1/2+t)`, so its curve
+has nonzero curvature rather than a flat baseline. Conditional traffic counts
+retries and the final transition into success. It excludes terminal outgoing
+edges and is undefined when success has probability zero. The plot joins
+sampled points; the displayed rational formula defines the full interior
+response. [RESPONSE.md](RESPONSE.md) gives the derivation, input domain and limits.
 
-```sh
-absorblab-lump examples/lumping.json --output /tmp/lumping.json
-absorblab-lump /tmp/lumping.json --verify
-# Equivalently: python -m absorblab.lumping_cli ...
-python tools/check_lumping_sympy.py  # optional SymPy 1.14.0
-```
+### When grouping is safe
 
-The full native suite now has 30 tests (16 first-hit +14 lumping). The lumping differential set contains 527 complete reports: 435 exhaustive small cases, 80 seeded rational chains and 12 authored controls. Native generation, independent all-partition replay and browser BigInt output agree on all 6,448 partition records, 637 refinement states and 4,038 quotient obligations. All 255 noninput primitive leaves of one full certificate were separately changed and rejected. The optional SymPy 1.14.0 matrix reference actually checks those 527 requests, all 6,448 partition mass matrices, 4,038 `PC=CQ` cells and 2,038 matrix-power equalities.
-
-Actual Chrome checks 36 lumping reports at 1280/390/320 pixels, 48 refinement states, 138 pair selections, 816 partition selections, 618 forecast selections, 345 graph edges and 12 trusted completed downloads replayed by the native checker. Set `LUMPING_SCREEN_DIR` to save full-page images or `ABSORBLAB_LUMPING_URL` to run the same checks against deployment. These finite comparisons are descriptive evidence, not a performance benchmark or a replacement for the all-step algebra. [LUMPING.md](LUMPING.md) states the contract, proof, sources and limits.
+The aggregation inspector finds the coarsest observation/status-respecting
+strong lumping. Its default needs two refinement rounds. You can inspect
+noncontiguous blocks, every partition and each cell of `PC=CQ`. The all-step
+identity follows by induction, not from matching a few forecasts.
+[LUMPING.md](LUMPING.md) states the contract and proof. This is not weak or
+approximate aggregation, a finite-horizon equivalence or a full model checker.
 
 ## A counterexample you can inspect
 
@@ -59,7 +73,12 @@ Python 3.10-3.13:
 python -m pip install .
 absorblab examples/conditioning.json --output /tmp/absorblab-certificate.json
 absorblab /tmp/absorblab-certificate.json --verify
-# Equivalently: python -m absorblab ...
+absorblab-lump examples/lumping.json --output /tmp/lumping.json
+absorblab-lump /tmp/lumping.json --verify
+absorblab-response examples/response.json --output /tmp/response.json
+absorblab-response /tmp/response.json --verify
+# Module entrypoints: python -m absorblab,
+# python -m absorblab.lumping_cli, python -m absorblab.response_cli
 python -m unittest discover -s tests -v
 bash tools/check_wheel.sh
 ```
@@ -92,19 +111,46 @@ The native generator uses reverse support, Tarjan components, exact Gauss-Jordan
 
 ## Checks and what they mean
 
-The original first-hit suite has 16 tests. It includes all 81 two-state uniform nonempty-support/status cases; all 729 deterministic three-state/status cases with a separate unique-path oracle; all 9,261 three-state uniform nonempty-support/status cases; 120 seeded rational chains; 120 acyclic weighted chains with a separate full-path moment oracle; state/edge permutation; schema caps; exact mass and moment equations; checker import isolation; atomic CLI output; and twenty full-report forged-field changes plus type failures.
+The current suite has **42 Python tests and 11 Node tests**, including actual
+Chrome checks for all three inspectors. The Python total retains the original
+16 first-hit tests, adds 14 lumping tests and adds 12 response tests. Node runs
+engine comparisons and actual browser interactions; these are test cases, not
+11 separate browser suites.
+
+| Workflow | Native/browser full-report comparison | Actual Chrome checks |
+| --- | --- | --- |
+| First hit | 213 reports: 12 controls, 81 two-state cases and 120 seeded rational chains. | 36 reports across 320/390/1280 pixels; all state, horizon, support and elimination selections; 12 trusted completed downloads. |
+| Strong lumping | 527 reports: 435 exhaustive small cases, 80 seeded chains and 12 controls; 6,448 partitions and 4,038 quotient cells. | 36 reports; 48 refinement states, 138 pair selections, 816 partition selections, 618 forecast selections and 12 trusted completed downloads. |
+| Row response | 146 reports: 12 controls, 54 two-state combinations and 80 seeded chains; 1,909 samples, 61,255 conditional edge cells and 15,435 derivative pairs. | 36 control reports, 1,293 root/sample selections and 12 trusted completed downloads, plus 12 dense six-state views at desktop/320 pixels. |
+
+These are finite descriptive checks, not performance benchmarks, exhaustive
+coverage of six-state rational chains or a proof of the shared specification.
+The native replay checkers use alternate support and algebra calculations;
+they still share schema and some helpers. The browser uses separate BigInt
+engines. [METHOD.md](METHOD.md), [LUMPING.md](LUMPING.md) and
+[RESPONSE.md](RESPONSE.md) separate those dependencies and numerical checks
+from the mathematical arguments.
+
+The first-hit tests include all 81 two-state uniform nonempty-support/status cases; all 729 deterministic three-state/status cases with a separate unique-path oracle; all 9,261 three-state uniform nonempty-support/status cases; 120 seeded rational chains; 120 acyclic weighted chains with a separate full-path moment oracle; state/edge permutation; schema caps; exact mass and moment equations; checker import isolation; atomic CLI output; and twenty full-report forged-field changes plus type failures.
 
 The browser-engine differential set has 213 full reports: twelve controls, 81 two-state cases, 120 seeded rational chains. All 682 state records, 4,284 forecast rows and 191 elimination stages agree exactly with Python. This is bounded descriptive agreement, not a proof or performance benchmark. The actual Chrome set runs twelve controls at 320, 390 and 1280 pixels: 36 reports, 120 state selections, 456 conditioned destination rows, 1,068 forecast rows, 75 support rounds, 45 elimination stages, twelve actual downloaded reports, and stale/invalid input checks. Integer JSON spelling and trailing-name/probability whitespace are rejected consistently with Python's input contract.
 
-Fresh wheel checks run from outside the checkout, assert six `site-packages` module origins, compare twelve reports through both console and module entrypoints and reject twenty forged CLI reports. Python 3.10, 3.11, 3.12 and 3.13 are separate CI jobs.
+Fresh wheel checks run outside the checkout and assert all fourteen package
+module origins in `site-packages`. Each of the three workflows compares its
+twelve controls through both console and module entrypoints. First-hit checks
+reject 20 forged CLI reports; lumping and response each reject 24 CLI and 24
+direct-checker forgeries, with atomic output preservation for CLI failures.
+Python 3.10, 3.11, 3.12 and 3.13 are separate CI jobs.
 
-### Optional external exact reference
+### Optional external exact references
 
 ```sh
 uv run --no-project --with sympy==1.14.0 --python 3.13 python tools/check_sympy.py
+uv run --no-project --with sympy==1.14.0 --python 3.13 python tools/check_lumping_sympy.py
+uv run --no-project --with sympy==1.14.0 --python 3.13 python tools/check_response_sympy.py
 ```
 
-This genuinely invokes SymPy 1.14.0 on 213 requests, comparing 682 success/failure probability pairs and 351 conditional mean/second-moment/variance triplets. The reference uses Boolean transitive closure, SymPy `inv(method='ADJ')`, and an independently formed success-conditioned chain whose moments are solved with `LUsolve`. It is development-only and not installed as a runtime dependency. It checks these finite examples, not every possible chain, all certificate fields or an independently certified theorem. Its seed differs from the browser/native seeded sets. [METHOD.md](METHOD.md) lists the operator and probability sources.
+The first script invokes SymPy 1.14.0 on 213 requests, comparing 682 success/failure probability pairs and 351 conditional mean/second-moment/variance triplets. The reference uses Boolean transitive closure, SymPy `inv(method='ADJ')`, and an independently formed success-conditioned chain whose moments are solved with `LUsolve`. It is development-only and not installed as a runtime dependency. It checks these finite examples, not every possible chain, all certificate fields or an independently certified theorem. Its seed differs from the browser/native seeded sets. [METHOD.md](METHOD.md) lists the operator and probability sources. The lumping reference checks 527 requests, 6,448 partition mass matrices, 4,038 quotient cells and 2,038 matrix-power equalities. It imports the native generator and test corpus, so it is a matrix reference rather than independent full-report replay. The response reference checks 146 requests, 928 symbolic success/failure curves and 10,290 derivative pairs. It uses the reported transient indices and checks algebra, not independent support analysis. [LUMPING.md](LUMPING.md) and [RESPONSE.md](RESPONSE.md) spell out those limits.
 
 ## Boundaries
 
